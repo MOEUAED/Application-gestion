@@ -20,13 +20,21 @@ class Member {
         $this -> id = $id ;
     }
     public function setName(string $name){
-        $this -> name = $name ;
+        if (!empty($name)){
+            $this -> name = $name ;
+        }else{
+            echo "Name Is Empty !!";
+        }
     }
     public function getName(){
         return $this -> name ;
     }
     public function setEmail(string $email){
-        $this -> email = $email ;
+        if(!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $this -> email = $email ;
+        }else{
+            echo"Invalid Email !!" ;
+        }
     }
     public function getEmail(){
         return $this -> email ;
