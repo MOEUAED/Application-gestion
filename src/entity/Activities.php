@@ -7,15 +7,17 @@ class Activities {
     private ?int $id = null ;
     private int $projet_id ;
     private string $description ;
-    private string $statut ;
+    private string $statut = 'en_cours';
     private ?\DateTimeImmutable $createdAt = null;
 
     // Methodes
-    public function __construct(int $projet_id , string $description)
+    public function __construct(int $projet_id, string $description, string $statut = 'en_cours')
     {
-        $this -> setProjetId($projet_id) ;
-        $this -> setDescription($description );
+        $this->setProjetId($projet_id);
+        $this->setDescription($description);
+        $this->setStatus($statut);
     }
+
 
     public function setId(?int $id){
         $this -> id = $id ;
