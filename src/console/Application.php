@@ -1,25 +1,31 @@
 <?php
-
 namespace src\Console;
+require_once __DIR__ . '/../entity/Membre.php';
+require_once __DIR__ . '/../entity/Projet.php';
+require_once __DIR__ . '/../entity/ProjetCourt.php';
+require_once __DIR__ . '/../entity/ProjetLong.php';
+require_once __DIR__ . '/../entity/Activities.php';
+
 
 use PDO;
-use src\Repository\MembreRepository;
-use src\Repository\ProjetRepository;
-use src\Repository\ActiviteRepository;
-use src\entity\Member;
+use src\repository\MemberRepository;
+use src\repository\ProjetRepository;
+use src\repository\ActiviteRepository;
+use src\entity\member\Member;
 use src\entity\ProjetCourt;
 use src\entity\ProjetLong;
 use src\entity\activities\Activities;
 
 class Application
 {
-    private MembreRepository $membreRepo;
+    private MemberRepository $membreRepo;
     private ProjetRepository $projetRepo;
     private ActiviteRepository $activiteRepo;
 
     public function __construct(PDO $pdo)
     {
-        $this->membreRepo   = new MembreRepository($pdo);
+        // Les repositories acceptent maintenant $pdo
+        $this->membreRepo   = new MemberRepository($pdo);
         $this->projetRepo   = new ProjetRepository($pdo);
         $this->activiteRepo = new ActiviteRepository($pdo);
     }
@@ -54,6 +60,7 @@ class Application
             }
         }
     }
+
     private function menuMembres(): void
     {
         echo PHP_EOL;
@@ -69,8 +76,12 @@ class Application
                 $name  = readline("Nom : ");
                 $email = readline("Email : ");
                 $member = new Member($name, $email);
-                $this->membreRepo->create($member);
-                echo "Membre ajoute !" . PHP_EOL;
+                try {
+                    $this->membreRepo->create($member);
+                    echo "Membre ajoute !" . PHP_EOL;
+                } catch (\Exception $e) {
+                    echo "Erreur : " . $e->getMessage() . PHP_EOL;
+                }
                 break;
 
             case '2':
@@ -82,14 +93,17 @@ class Application
 
             case '3':
                 $id = (int) readline("ID du membre : ");
-                if ($this->membreRepo->delete($id)) {
-                    echo "Membre supprime " . PHP_EOL;
-                } else {
-                    echo "Suppression impossible !!" . PHP_EOL;
+                try {
+                    if ($this->membreRepo->delete($id)) {
+                        echo "Membre supprime " . PHP_EOL;
+                    }
+                } catch (\Exception $e) {
+                    echo "Erreur : " . $e->getMessage() . PHP_EOL;
                 }
                 break;
         }
     }
+
     private function menuProjets(): void
     {
         echo PHP_EOL;

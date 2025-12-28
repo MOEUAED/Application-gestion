@@ -3,7 +3,7 @@
 namespace src\Repository;
 
 use PDO;
-use src\entity\Activities;
+use src\entity\activities\Activities;
 
 class ActiviteRepository
 {
